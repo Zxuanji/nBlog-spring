@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Blog</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  <!-- Include the Quill library -->
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .form-section {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      margin: 0 auto;
+    }
+
+    .form-label {
+      font-weight: 600;
+    }
+
+    .navbar {
+      background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .navbar .nav-item:not(:last-child) {
+      margin-right: 15px;
+    }
+
+    .navbar .nav-link {
+      color: #fff;
+    }
+
+    .navbar .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .navbar .search-box {
+      width: 200px;
+    }
+
+    .navbar .search-box input[type="text"] {
+      width: 100%;
+      border: none;
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      color: #fff;
+      font-family: Brush Script MT;
+      font-size: 40px;
+      text-shadow: 2px 2px #4f956b;
+    }
+
+    .col-md-8 {
+      margin: 0 auto;
+    }
+
+    .profile-picture {
+      width: 50px;
+      height: 50px;
+      /*equal width for square shape*/
+      object-fit: cover;
+    }
+
+    .nav-item.dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    .navbar .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+
+    .profile-image-container {
+      position: relative;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div th:replace="fragments/navbar :: navbar"></div>
+
+  <div class="container py-5">
+    <!-- Page Heading -->
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="text-center">Create Blog</h1>
+      </div>
+    </div>
+
+    <!-- Blog Upload Form -->
+    <div class="col-md-8 form-section">
+      <form th:action="@{/home/create}" th:object="${blog}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="contentTitle" class="form-label" font-size=30px>Post Title</label>
+          <input type="text" class="form-control" id="contentTitle" th:field=*{contentTitle}>
+        </div>
+        <!-- subtitle -->
+        <div class="mb-3">
+          <label for="subTitle" class="form-label" font-size=26px>Subtitle</label>
+          <input type="text" class="form-control" id="subTitle" th:field=*{subTitle}>
+        </div>
+        <!-- content -->
+        <div class="mb-3">
+          <label for="content" class="form-label" font-size=20px>Content</label>
+          <textarea class="form-control" id="content" rows="10" th:field="*{content}"></textarea>
+        </div>
+        <!-- imgUrl -->
+        <div class="mb-3">
+          <label for="imgUrl" class="form-label" font-size=20px>Image URL</label>
+          <input type="text" class="form-control" id="imgUrl" th:field=*{image}>
+        </div>
+
+
+
+
+
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        </script>
+
+
+
+
+
+        <!-- 选择语言 -->
+        <!-- 当 for 属性的值与某个表单元素的 id 值相匹配时，点击该 <label> 会将焦点移至并激活对应的表单元素。 -->
+        <div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="language1" th:field="*{languageSelected}"
+              th:value="Python">
+            <label class="form-check-label" for="language1">Python</label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="language2" th:field="*{languageSelected}"
+              th:value="Java">
+            <label class="form-check-label" for="language2">Java</label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="language3" th:field="*{languageSelected}"
+              th:value="'c/c++'">
+            <label class="form-check-label" for="language3"> C/C++ </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="language4" th:field="*{languageSelected}"
+              th:value="javaScript">
+            <label class="form-check-label" for="language4"> JavaScript </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="language5" th:field="*{languageSelected}"
+              th:value="'c#'">
+            <label class="form-check-label" for="language5"> C# </label>
+          </div>
+        </div>
+
+        <!-- 选择技术 -->
+        <!-- th:field 定义了表单元素如何与后端模型的特定属性绑定
+            th:value表示当选择了某个选项后,应该传递什么值给后端 -->
+        <div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="technique1" th:field="*{techniqueSelected}"
+              th:value="asp.net">
+            <label class="form-check-label" for="technique1">ASP.Net</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="technique2" th:field="*{techniqueSelected}"
+              th:value="sql">
+            <label class="form-check-label" for="technique2">SQL</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="technique3" th:field="*{techniqueSelected}"
+              th:value="spring">
+            <label class="form-check-label" for="technique3">Spring</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="technique4" th:field="*{techniqueSelected}"
+              th:value="'block chain'">
+            <label class="form-check-label" for="technique4">Block Chain</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="technique5" th:field="*{techniqueSelected}"
+              th:value="'machine learning'">
+            <label class="form-check-label" for="technique5">Machine Learning</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="technique6" th:field="*{techniqueSelected}"
+              th:value="nlp">
+            <label class="form-check-label" for="technique5">NLP</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="technique7" th:field="*{techniqueSelected}"
+              th:value="'computergraphics'">
+            <label class="form-check-label" for="technique5">Computer Graphics</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-5" style="width: 100%; height:50px; font-size:20px; font-weight: bold;
+          background-color: #ac99e0; color: white; border: none;"
+          onmouseover="this.style.backgroundColor='#8162d9'; this.style.transform='scale(1.02)';"
+          onmouseout="this.style.backgroundColor='#ac99e0'; this.style.transform='scale(1)';">Submit</button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Initialize Quill Editor -->
+</body>
+
+</html>

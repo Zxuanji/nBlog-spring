@@ -1,0 +1,38 @@
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" style="color:#fff" th:href="@{/home/list}">NBlog</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navbarContent">
+                <form th:action="@{/home/search}" method="get" class="form-inline my-2 my-lg-0 search-box"
+                    style="width: 75%;">
+                    <input class="form-control mr-sm-2" type="text" name="query" placeholder="Start typing to search"
+                        aria-label="Search" style="width: 100%;">
+                </form>
+
+            </div>
+
+            <div class="ml-auto d-flex align-items-center">
+                <a th:href="@{/home/create}" class="btn btn-primary join-btn" style="margin-right: 10px;">Write!</a>
+                <a th:href="@{/home/bookmark}" class="bi bi-bookmark-star-fill"
+                    style="font-size: 2rem; color:rgb(31, 135, 97); margin-right: 10px; border:2pt; text-shadow: 1px 1px 3px #4f956b;"></a>
+                <div class="nav-item dropdown profile-image-container">
+                    <img th:src="${activeUser.profilePicture}" alt="Avatar"
+                        class="rounded-circle profile-picture dropdown-toggle" id="navbarProfileDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        style="width: 50px; height: 50px; cursor: pointer;">
+                    <div class="dropdown-menu" aria-labelledby="navbarProfileDropdown">
+                        <a class="dropdown-item" th:href="@{/user/@}+*{activeUser.displayName}">Profile</a>
+                        <a class="dropdown-item" th:href="@{/user/settings}">Settings</a>
+                        <a class="dropdown-item" th:href="@{/account/logout}">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </nav>
+</div>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up Page</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+
+        .container {
+            max-width: 960px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            margin: 40px auto;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        .form-group label {
+            color: #495057;
+        }
+
+        .btn-primary {
+            background-color: #a1c4fd;
+            border-color: #a1c4fd;
+        }
+
+        .btn-primary:hover {
+            background-color: #c2e9fb;
+            border-color: #c2e9fb;
+        }
+
+        .form-control:focus {
+            border-color: #a1c4fd;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(161, 196, 253, 0.6);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <!-- Celebrity Quotes Column -->
+            <div class="col-md-6">
+                <img src="/images/welcome.jpg" alt="Welcome Image" style="max-width: 100%; height: auto; display: block;"/>
+                <p class="quote">Sign up for free and get access to unlimited blog post!</p>
+                <!-- Add more quotes here -->
+            </div>
+
+            <!-- Sign Up Form Column -->
+            <div class="col-md-6">
+                <h2>Sign Up</h2>
+                <form id="createAccount" th:action="@{/account/create}" method="post" th:object="${user}" autocomplete="off">
+                    <div class="form-group">
+                        <label for="displayName">Display Name</label>
+                        <input id="displayName" th:field="*{displayName}" type="text" class="form-control" />
+                        <span class="text-danger" th:if="${#fields.hasErrors('displayName')}" th:errors="*{displayName}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" th:field="*{email}" type="email" class="form-control" />
+                        <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input id="password" th:field="*{password}" type="password" class="form-control" />
+                        <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordConfirm">Confirm Password</label>
+                        <input id="passwordConfirm" type="password" class="form-control" />
+                        <span class="text-danger" id="passwordError"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Account Creation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Account created successfully!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#createAccount').on('submit', function (e) {
+                e.preventDefault();
+
+                // Check if passwords match
+                if ($('#password').val() === $('#passwordConfirm').val()) {
+                    $('#successModal').modal('show');
+                } else {
+                    $('#passwordError').text("Passwords do not match.");
+                }
+            });
+        });
+    </script>
+
+    <!-- Include Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>    
+</body>
+
+</html>

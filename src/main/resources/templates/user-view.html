@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${viewUser.displayName} + ' - NBlog'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .container{
+            width: 80%;
+        }
+
+        /*row1 col1 profile picture*/
+        .profile-picture1 {
+            width: 100%; /* Makes the image fully occupy its parent container's width */
+            max-width: 200px; /* Maximum size to not exceed, preserving the original dimensions */
+            height: auto; /* Adjusts the height automatically to maintain the aspect ratio */
+            border-radius: 50%; /* Keeps the rounded-circle appearance */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /*row1 col2 displayName, profileTagline, followers, following, location, activeDate + follow + linkedin + github*/    
+        .display-name {
+            font-size: 2.5em; /* Larger font size for username */
+            font-weight: bold;
+        }
+        
+        .profile_tagline {
+            font-size: 1.2em;
+            height: auto;
+        }
+        
+        .user-info .followers,
+        .user-info .following {
+            font-size: 1.2em; /* Slightly larger font size for followers/following */
+            text-align: center; /* Center the text if the columns are wide enough */
+            font-weight: normal;
+        }
+        
+        /*location icon*/
+        .user-info .fa-map-marker-alt {
+            font-size: 1em;
+        }
+
+        .fa-map-marker-alt {
+            color: #454545;
+            margin-right: 10px; /* To add some space between the icon and the text */
+        }
+
+        .user-info .location {
+            display: flex;
+            align-items: center; /* Center icon with text vertically */
+            gap: 0.5em; /* Space between icon and text */
+            font-size: 1.2em; /* Slightly smaller than username but still prominent */
+        }
+
+        .calendar {
+            color: #454545;
+            margin-right: 10px; /* To add some space between the icon and the text */
+        }
+    
+        .user-info .active-since {
+            font-size: 1.1em; /* Appropriate size for 'active since' text */
+            margin-top: 0em; /* Some space above the 'active since' text */
+            gap: 0.5em; /* Space between icon and text */
+        }
+        
+        /*linkedin and github button*/
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: none;
+            border-radius: 5px;
+            padding: 0rem 0rem;
+            font-size: 1rem;
+            text-decoration: none;
+            color: rgb(134, 134, 134);
+        }
+    
+        .btn-linkedin .fa-linkedin,
+        .btn-github .fa-github {
+            font-size: 2rem;
+        }
+
+        .fab {
+            font-size: 1em;
+        }
+
+        /*follow button*/
+        .btn-follow {
+            background-color: #007bff; /* Primary color */
+            color: white;
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+            font-size: 1.3em;
+            border-radius: 30px;
+            width: 150px; /* Example fixed width */
+            height: 50px; /* Example fixed height */
+            padding: 0.375rem 0.75rem;
+        }
+    
+        .btn-follow:hover {
+            background-color: hsla(211, 100%, 35%, 0.698); /*Darker shade for hover state*/
+            color: #ffffff; /* Slightly darker blue for text color on hover */
+        }
+    
+        .btn-followed {
+            background-color: #ffffff;
+            border-color: #007bff;
+            color: #007bff;
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+            font-size: 1.3em;
+            border-radius: 30px;
+            width: 150px; /* Example fixed width */
+            height: 50px; /* Example fixed height */
+            padding: 0.375rem 0.75rem;
+        }
+        
+        .btn-followed:hover {
+            background-color: #e7f5ff; /* Slightly darker white/blue for hover state */
+            border-color: #007bff;
+            color: #007bff; /* Slightly darker blue for text color on hover */
+        }
+
+        /*rol2 col1*/
+        .title {
+            font-size: 1.5em; /* Larger font size for username */
+            font-weight: bold;
+        }
+
+        /* Ensure all text is vertically centered and spaced nicely */
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+            /* Subtle text shadow for depth */
+        }
+    
+        .user-info {
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 1rem; /* Spacing from the profile picture */
+        }
+    
+        .user-info>div {
+            margin-bottom: 0.25rem; /* Spacing between user info elements */
+        }
+    
+        .user-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1rem;
+            /* Align with the user info section */
+        }
+    
+        .user-actions>a {
+            margin-bottom: 0.5rem;
+            /* Spacing between buttons */
+        }
+    
+        @media (min-width: 768px) {
+    
+            /* Adjustments for larger screens */
+            .user-info {
+                flex-direction: row;
+                align-items: center;
+                justify-content: start;
+                padding: 0px;
+            }
+    
+            .user-info>div {
+                margin-right: 2rem;
+                /* Spacing between user info elements */
+            }
+    
+            .user-actions {
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+    
+        body,
+        html {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #f4f4f4;
+        }
+    
+        .navbar {
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+    
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff;
+            font-family: Brush Script MT;
+            font-size: 40px;
+            text-shadow: 2px 2px #4f956b;
+        }
+    
+        .navbar .nav-item:not(:last-child) {
+            margin-right: 15px;
+        }
+    
+        .navbar .nav-link {
+            color: #fff;
+        }
+    
+        .navbar .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    
+        .navbar .search-box {
+            width: 200px;
+        }
+    
+        .navbar .search-box input[type="text"] {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+        }
+    
+        .user-profile-section {
+            border: 1px solid #dee2e6;
+            border-radius: .25rem;
+            background-color: #fff;
+            padding: 20px; /* Padding inside the border */
+        }
+    
+        .article-link {
+            color: #343a40;
+            font-weight: bold;
+        }
+    
+        .article-link:hover,
+        .article-link:focus {
+            color: #343a40;
+            text-decoration: none;
+        }
+
+        .tech-stack-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: start;
+        }
+
+        .tech-stack-badge {
+            display: inline-flex; /* Allows the badge to only take up as much space as needed */
+            align-items: center; /* Vertically centers the text inside the badge */
+            justify-content: center; /* Horizontally centers the text inside the badge */
+            margin: 5px; /* Add some space around each badge */
+            background-color: #0d6efd; /* Bootstrap primary color */
+            color: white;
+            padding: 0.5rem 1rem; /* Add some padding inside the badges */
+            border-radius: 0.375rem; /* Rounded corners for the badges */
+            text-align: center;
+            white-space: nowrap; /* Prevent the text from wrapping */
+        }
+
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            /*equal width for square shape*/
+            object-fit: cover;
+        }
+
+        .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .navbar .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+        }
+
+        .profile-image-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <!--Row1-->
+    <div class="container my-4">
+        <div class="row align-items-center user-profile-section">
+            <!--Col1 profilePicture-->
+            <div class="col-3 text-center mb-3 mb-lg-0 d-flex flex-column">
+                <img id="profilePicture" th:src="${viewUser.profilePicture}" alt="Avatar" class="rounded-circle shadow"
+                                style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
+            </div>
+            
+            <!--Col2 displayName + follow, profileTagline + linkedinLink + githubLink, location, signupTime, followers, following-->
+            <div class="col-9 d-flex flex-column">
+                <div class="row">
+                    <div class="col-8 mt-3"><p class="display-name" th:text="${viewUser.displayName}"></p></div>
+                    <div class="col-4 mb-3 mt-3 text-center" th:if="${activeUserProfile}"></div>
+                    <div class="col-4 mb-3 mt-3 text-center" th:unless="${activeUserProfile}">
+                        <button th:if="${followingViewUser}" onclick="redirectToAddOrRemoveFollowing()" class="btn-followed btn">Following</button>
+                        <button th:unless="${followingViewUser}" onclick="redirectToAddOrRemoveFollowing()" class="btn-follow btn">+ Follow</button>
+                        <input id="viewUserId" th:value="${viewUser.userId}" type="hidden"></input></div>
+                </div>
+                <div class="row">
+                    <div class="col-8 mb-3"><p class="profile_tagline" th:text="${viewUser.profileTagline}"></p></div>
+                    <div class="col-1 d-flex flex-column mt-3"></div>
+                    <div class="col-1 mb-3 text-center"><a th:href="|${viewUser.linkedinLink}|" class="btn btn-linkedin social-btn me-2"><i class="fab fa-linkedin"></i></a></div>
+                    <div class="col-1 mb-3 text-center"><a th:href="|${viewUser.githubLink}|" class="btn btn-github social-btn"><i class="fab fa-github"></i></a></div>
+                    <div class="col-1 d-flex flex-column mt-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-2 d-flex flex-column mt-3"><p><strong th:text="${followers}"></strong> Followers</p></div>
+                    <div class="col-2 d-flex flex-column mt-3"><p><strong th:text="${following}"></strong> Following</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-2 d-flex flex-column"><p class="location"><i class="fas fa-map-marker-alt"></i><span th:text="${viewUser.location}"></span></p></div>
+                    <div class="col-4 d-flex flex-column"><p class="active-since"><i class="bi bi-calendar-fill calendar"></i><span th:text="'Active Since ' + ${#temporals.format(viewUser.signupTime, 'MMM, yyyy')}"></span></p></div>                
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Row2-->
+    <div class="container my-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!--Col1 aboutMe-->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <p class="card-title title mb-3">About Me</p>
+                        <p class="card-text flex-grow-1" th:text="${viewUser.aboutMe}"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Col2 techStack-->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <p class="card-title title  mb-3">My Tech Stack</p>
+                        <div class="card-text flex-grow-1 tech-stack-container" th:each="techStack : ${viewUserTechStack}">
+                            <div class="badge bg-info tech-stack-badge" th:text="${techStack}"></div>
+                            <!-- More tech stack badges will be added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--Col3 blogpost history-->
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title title  mb-3">Writes At</h5>
+                        <p class="card-text flex-grow-1">
+                            <a class="btn btn-primary" th:href="@{/home/@}+*{viewUser.displayName}">Read blog</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Row3-->
+    <div class="container my-4">
+        <div class="row row-cols-1 g-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body d-flex flex-column">
+                        <p class="card-title title mb-3">Recent Activity</p>
+                        <ul class="list-group list-group-flush">
+                            <!--Other Activities-->
+                            <li class="list-group-item" th:each="blog:${viewUser.postedBlogs}">
+                                <div class="row align-items-center">
+                                    <div class="col-2">
+                                        <span class="text-secondary" th:text="${blog.blogTime}"></span>
+                                    </div>
+                                    <div class="col-10">
+                                        <i class="fas fa-pencil-alt text-primary"></i>
+                                        Wrote an article
+                                        <a href="#" class="article-link" th:text="${blog.contentTitle}"></a>
+                                    </div>
+                                    
+                                </div>
+                            </li>
+                            <!--First Activity: Joined Nblog-->
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-2">
+                                        <span class="text-secondary" th:text="${#temporals.format(viewUser.signupTime, 'MMM d yyyy')}"></span>
+                                    </div>
+                                    <div class="col-10">
+                                        <i class="fas fa-user-circle text-primary"></i>
+                                        Joined NBlog
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectToAddOrRemoveFollowing() {
+            var userId = document.getElementById('viewUserId').value;
+            var url = '/user/follow?userId=' + userId;
+            window.location.href = url;
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+    
+</body>
+
+</html>

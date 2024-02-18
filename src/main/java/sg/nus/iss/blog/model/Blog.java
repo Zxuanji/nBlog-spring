@@ -1,74 +1,101 @@
 package sg.nus.iss.blog.model;
 
-import java.time.LocalDate;
+import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int BlogId;
-    private String imageUrl;
-    private String title;
+    private int blogId; 
+    private String image;
     private int readingTime;
     private String contentTitle;
-    private String content;
-    private LocalDate blogTime;
-    private CategoryNameEnum blogCategory;
+    private String subTitle;
+    @Column(columnDefinition = "TEXT")
+    private String content; 
+    private String blogTime; 
+    private String languageSelected;
+    private String techniqueSelected;
     private BlogStatusEnum blogStatus;
-    private int blogCommentCount;
+    private int blogCommentCount; //delete
     private int blogLikeCount;
+    private String labelList;
+    
+    @OneToMany(mappedBy = "commentBlog", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> blogComments;
 
-    @ManyToOne
-    private User user;
+    @JsonIgnore
+    @OneToMany(mappedBy="blog", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true) // to count the number of read for each blog post
+    private List<BlogHistory> blogHistories;
+
+    @ManyToOne(cascade = {CascadeType.ALL, CascadeType.PERSIST})
+    private BlogUser blogUser;
 
     public Blog() {
     }
 
-    public Blog(String imageUrl, String title, int readingTime, String contentTitle, String content, LocalDate blogTime,
-            CategoryNameEnum blogCategory, BlogStatusEnum blogStatus, int blogCommentCount, int blogLikeCount,
-            User user) {
-        this.imageUrl = imageUrl;
-        this.title = title;
+    
+
+    public Blog(String image, int readingTime, String contentTitle, String subTitle, String content,
+            String blogTime, String languageSelected, String techniqueSelected, BlogStatusEnum blogStatus,
+            int blogCommentCount, int blogLikeCount, List<Comment> blogComments, List<BlogHistory> blogHistories,
+            BlogUser blogUser) {
+        this.image = image;
         this.readingTime = readingTime;
         this.contentTitle = contentTitle;
+        this.subTitle = subTitle;
         this.content = content;
         this.blogTime = blogTime;
-        this.blogCategory = blogCategory;
+        this.languageSelected = languageSelected;
+        this.techniqueSelected = techniqueSelected;
         this.blogStatus = blogStatus;
         this.blogCommentCount = blogCommentCount;
         this.blogLikeCount = blogLikeCount;
-        this.user = user;
+        this.blogComments = blogComments;
+        this.blogHistories = blogHistories;
+        this.blogUser = blogUser;
     }
 
+
+
     public int getBlogId() {
-        return BlogId;
+        return blogId;
     }
 
     public void setBlogId(int blogId) {
-        BlogId = blogId;
+        this.blogId = blogId;
+    }
+    
+    public String getLabelList() {
+        return labelList;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public void setLabeList(String labelList) {
+        this.labelList = labelList;
+    }
+    public String getImage() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    
 
     public int getReadingTime() {
         return readingTime;
@@ -86,6 +113,14 @@ public class Blog {
         this.contentTitle = contentTitle;
     }
 
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
     public String getContent() {
         return content;
     }
@@ -94,20 +129,28 @@ public class Blog {
         this.content = content;
     }
 
-    public LocalDate getBlogTime() {
+    public String getBlogTime() {
         return blogTime;
     }
 
-    public void setBlogTime(LocalDate blogTime) {
+    public void setBlogTime(String blogTime) {
         this.blogTime = blogTime;
     }
 
-    public CategoryNameEnum getBlogCategory() {
-        return blogCategory;
+    public String getLanguageSelected() {
+        return languageSelected;
     }
 
-    public void setBlogCategory(CategoryNameEnum blogCategory) {
-        this.blogCategory = blogCategory;
+    public void setLanguageSelected(String languageSelected) {
+        this.languageSelected = languageSelected;
+    }
+
+    public String getTechniqueSelected() {
+        return techniqueSelected;
+    }
+
+    public void setTechniqueSelected(String techniqueSelected) {
+        this.techniqueSelected = techniqueSelected;
     }
 
     public BlogStatusEnum getBlogStatus() {
@@ -134,20 +177,37 @@ public class Blog {
         this.blogLikeCount = blogLikeCount;
     }
 
-    public User getUser() {
-        return user;
+    public List<BlogHistory> getBlogHistories() {
+        return blogHistories;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setBlogHistories(List<BlogHistory> blogHistories) {
+        this.blogHistories = blogHistories;
+    }
+
+    public BlogUser getBlogUser() {
+        return blogUser;
+    }
+
+    public void setBlogUser(BlogUser blogUser) {
+        this.blogUser = blogUser;
+    }
+
+    public List<Comment> getBlogComments() {
+        return blogComments;
+    }
+
+    public void setBlogComments(List<Comment> blogComments) {
+        this.blogComments = blogComments;
     }
 
     @Override
     public String toString() {
-        return "Blog [BlogId=" + BlogId + ", imageUrl=" + imageUrl + ", title=" + title + ", readingTime=" + readingTime
-                + ", contentTitle=" + contentTitle + ", content=" + content + ", blogTime=" + blogTime
-                + ", blogCategory=" + blogCategory + ", blogStatus=" + blogStatus + ", blogCommentCount="
-                + blogCommentCount + ", blogLikeCount=" + blogLikeCount + ", user=" + user + "]";
+        return "Blog [blogId=" + blogId + ", image=" + image + ", readingTime=" + readingTime + ", contentTitle="
+                + contentTitle + ", subTitle=" + subTitle + ", content=" + content + ", blogTime=" + blogTime
+                + ", languageSelected=" + languageSelected + ", techniqueSelected=" + techniqueSelected
+                + ", blogStatus=" + blogStatus + ", blogCommentCount=" + blogCommentCount + ", blogLikeCount="
+                + blogLikeCount + "]";
     }
 
     

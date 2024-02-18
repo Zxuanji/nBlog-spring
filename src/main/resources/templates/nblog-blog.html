@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Post Title - NBlog</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Add your existing styles here */
+        body,
+        html {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            /* Formal font */
+            background: #f4f4f4;
+        }
+
+        .navbar {
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff;
+            font-family: Brush Script MT;
+            font-size: 40px;
+            text-shadow: 2px 2px #4f956b;
+        }
+
+        .navbar .nav-item:not(:last-child) {
+            margin-right: 15px;
+        }
+
+        .navbar .nav-link {
+            width: 80px;
+            color: #fff;
+            /* Adjusted for better visibility on gradient */
+        }
+
+        .blog-post {
+            margin-top: 40px;
+        }
+
+        .blog-title {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .blog-metadata {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .blog-content {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        /* Comments Section Styles */
+        .comments-section {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .comments-section .comment {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            /* Adds a line to separate comments */
+        }
+
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            /*equal width for square shape*/
+            object-fit: cover;
+        }
+
+        .comments-section .comment:last-child {
+            border-bottom: none;
+            /* Removes the border from the last comment */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" style="color:#fff" th:href="@{/nblog}">NBlog</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary" th:href="@{/account/login}"
+                            style="border-radius: 20px;">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container blog-post" th:object="${showedBlog}">
+        
+        <div class="blog-content">
+            <!-- 图片居中的容器 -->
+            <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                <!-- 图片自身的容器，用于保持4:3的比例 -->
+                <div style="width: 80%; /* 减少宽度百分比来缩小图片 */">
+                    <div style="display: flex; align-items: center;">
+                        <img th:src="*{blogUser.profilePicture}" alt="Avatar" class="rounded-circle profile-picture" style="width: 100px; height: 100px; border-radius: 50%; margin-right: 10px;" />
+                        <div>
+                            <h1 class="blog-title" th:text="*{contentTitle}"></h1>
+                            <div class="blog-metadata">
+                                Posted by <span title="View author profile" th:text="*{blogUser.displayName}"></span> on <span th:text="*{blogTime}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="position: relative; width: 100%; padding-top: 75%; /* 3/4的高度来保持4:3的比例 */">
+                        <img th:src="*{image}" title="Future Web" class="img-fluid"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" />
+                    </div>
+                    <br>
+                    <div>
+                        <p th:text="*{content}"></p>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <!-- <p th:text="*{content}"></p> -->
+
+        </div>
+        <!-- Add more content as needed -->
+    </div>
+    </div>
+
+
+    <div class="comments-section mt-4" id="commentsSection">
+        <h3>Comments</h3>
+        <div class="comment mb-3" id="comment-1" th:each="data : ${commentsData}">
+            <div class="comment-header">
+                <strong th:text="${data[2]}"></strong> says:
+                <span class="comment-date" th:text="${data[1]}"></span>
+            </div>
+            <div class="comment-body" th:text="${data[0]}">
+               
+            </div>
+        </div>
+       
+    </div>
+    <!-- Footer (Keep the footer consistent with the homepage) -->
+    <!-- Copy and paste your footer HTML code here -->
+    <div class="footer">
+        © 2024 NBlog. All rights reserved.
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

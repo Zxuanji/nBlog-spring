@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NBlog Home Page</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-cloud/build/d3.layout.cloud.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #f4f4f4;
+        }
+
+        .navbar {
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff;
+            font-family: Brush Script MT;
+            font-size: 40px;
+            text-shadow: 2px 2px #4f956b;
+        }
+
+        .navbar .nav-item:not(:last-child) {
+            margin-right: 15px;
+        }
+
+        .navbar .nav-link {
+            width: 80px;
+            color: #fff;
+            /* Adjusted for better visibility on gradient */
+        }
+
+        .navbar .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .navbar .search-box {
+            width: 200px;
+        }
+
+        .navbar .search-box input[type="text"] {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .post {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .post-title {
+            font-weight: 700;
+            /* Bold and formal font */
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .post-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            text-decoration: none;
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .read-more:hover {
+            background-image: linear-gradient(120deg, #c2e9fb 0%, #a1c4fd 100%);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.04);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /*introduction text*/
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 50vh;
+            /* Adjust height as needed */
+            margin-top: 50px;
+            /* Optional: Adjust based on your layout */
+        }
+
+        .hero-text h1,
+        .hero-text h3 {
+            font-weight: 900;
+            /* Extra bold */
+            margin: 0.5em 0;
+            /* Adjust spacing */
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            /* Larger size for h1 */
+        }
+
+        .hero-text h3 {
+            font-size: 1.5rem;
+            /* Adjust size for h3 */
+        }
+
+        /*create account button*/
+        .join-btn {
+            font-size: 1.2rem; /* Larger font size */
+            padding: 10px 30px; /* Larger padding for a bigger button */
+            border-radius: 30px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+            color: white; /* Text color */
+            margin-top: 20px; /* Additional spacing from the text above */
+        }
+
+        .join-btn:hover, .join-btn:focus {
+            background-color: #0056b3; /* Darker shade of primary color on hover/focus */
+            color: white; /* Keep text color white */
+            text-decoration: none; /* Remove underline on hover/focus */
+            transform: translateY(-2px); /* Slight raise effect on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow for hover */
+        }
+
+        .profile-picture {
+            width: 50px; /* Fixed width */
+            height: 50px; /* Fixed height to maintain a square shape */
+            border-radius: 50%; /* Circular shape */
+            object-fit: cover; /* Cover the container without stretching */
+        }
+
+        .blog-post-content {
+            height: 3em; /* 根据行高和字体大小调整此值 */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 您想显示的行数 */
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" style="color:#fff" th:href="@{/nblog}">NBlog</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-primary" th:href="@{/account/login}"
+                            style="border-radius: 20px;">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+      <div class="row justify-content-between align-items-center mb-5">
+        <div class="col text-start">
+          <h1 class="dashboard-title">Dashboard</h1>
+        </div>
+        <div class="col-auto text-end">
+          <div class="dropdown">
+            <button class="btn big-green-gradient-button dropdown-toggle" type="button" id="dropdownMonthButton"
+              data-bs-toggle="dropdown" aria-expanded="false" th:text="${month}" value="Select Month"></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item" th:each="m:${allMonths}" th:value="${m}" th:text="${m}"
+                  th:href="@{/admin/main/}+${m}"></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center mb-5" style="margin-bottom: 0;">
+        <div class="col-6" style="max-width: 1200px; height: 300px; margin: auto;">
+          <canvas id="dailyBlogPost"></canvas>
+        </div>
+        <div class="col-6" style="max-width: 1200px; height: 300px; margin: auto;">
+          <canvas id="dailyUserGraph"></canvas>
+        </div>
+      </div>
+      <div class="row justify-content-center mb-5" style="margin-top: 0;"> <!-- Reduce top margin -->
+        <div class="col-4" id="wordCloud" style="padding-right: 5px; margin: auto;"></div>
+        <div class="col-4" id="usersCountry" style="padding-right: 5px; margin: auto;"></div>
+        <div class="col-4" id="topUsersGraph" style="margin: auto;"></div>
+      </div>
+    </div>
+    <div class="row justify-content-center text-center">
+      <div class="col-12 col-md-4 dashboard-card">
+        <div class="value" th:text="${monthActiveUsers}"><!-- Backend data here --></div>
+        <div class="metric">Active Users</div>
+        <div class="change-indicator" th:text="'+' + ${monthPostReadCountChange} + '%'"><!-- Backend data here --></div>
+      </div>
+      <div class="col-12 col-md-4 dashboard-card">
+        <div class="value" th:text="${monthUserGrowth}"><!-- Backend data here --></div>
+        <div class="metric">User Growth</div>
+        <div class="change-indicator" th:text="'+' + ${monthUserGrowthChange} + '%'"><!-- Backend data here --></div>
+      </div>
+      <div class="col-12 col-md-4 dashboard-card">
+        <div class="value" th:text="${monthPostReadCount}"><!-- Backend data here --></div>
+        <div class="metric">Post Read</div>
+        <div class="change-indicator" th:text="'+' + ${monthPostReadCountChange} + '%'"><!-- Backend data here --></div>
+      </div>
+    </div>
+    </div>
+
+    <div class="footer">
+        © 2024 NBlog. All rights reserved.
+    </div>
+
+    <!--Data from controller-->
+  <script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    const xDateFromController = /*[[${xDate}]]*/[];
+    const yBlogPostFromController = /*[[${yBlogPost}]]*/[];
+    const yUserFromController = /*[[${yDataUser}]]*/[];
+
+    const xCountryFromController = /*[[${xCountry}]]*/[];
+    const yUserCountryFromController = /*[[${yUserCountry}]]*/[];
+
+    const xTopNumBlogPostFromController = /*[[${xTopNumBlogPost}]]*/[];
+    const yTopUserDisplayName = /*[[${yTopBlogUserByPost}]]*/[];
+    const yProfilePicture = /*[[${yProfilePicture}]]*/[];
+
+    var allTechniques = /*[[${techniquesSelected}]]*/[];
+    /*]]>*/
+  </script>
+
+  <!--Daily blog post count-->
+  <script>
+    const xDate = xDateFromController.map(label => label.toString()); // Ensure labels are strings
+    const yBlogPost = yBlogPostFromController.map(value => Number(value)); // Convert all y values to numbers
+    const maxYValueBP = yBlogPost.length > 0 ? Math.max(...yBlogPost) + 1 : 1;
+
+    const dailyBlogPostGraph = document.getElementById('dailyBlogPost').getContext('2d');
+    const barChart = new Chart(dailyBlogPostGraph, {
+      type: 'bar',
+      data: {
+        labels: xDate,
+        datasets: [{
+          label: 'Daily Blog Post',
+          backgroundColor: '#e0f7fa',
+          borderColor: '#00bcd4',
+          borderWidth: 1,
+          data: yBlogPost
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            afterDataLimits: axis => {
+              axis.max = maxYValueBP;
+            },
+            ticks: {
+              stepSize: 1,
+            }
+          },
+          x: {
+            ticks: {
+              autoSkip: false, // prevent skipping of labels
+              maxRotation: 45,
+              minRotation: 45,
+              maxTicksLimit: xDate.length
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Daily Blog Post'
+          }
+        },
+        responsive: true,
+        //maintainAspectRatio: false
+      }
+    });
+  </script>
+
+  <!--Daily user count-->
+  <script>
+    const yUser = yUserFromController;
+    const maxYValueU = yUser.length > 0 ? Math.max(...yUser) + 1 : 1;
+
+    const dailyUserGraph = document.getElementById('dailyUserGraph').getContext('2d');
+    const lineChart = new Chart(dailyUserGraph, {
+      type: 'line',
+      data: {
+        labels: xDateFromController,
+        datasets: [{
+          label: 'Daily User Count',
+          data: yUser,
+          borderColor: '#00838f',
+          backgroundColor: '#e0f7fa',
+        }]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Daily User Count',
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            afterDataLimits: axis => {
+              axis.max = maxYValueU;
+            },
+            ticks: {
+              stepSize: 1,
+            }
+          },
+          x: {
+            ticks: {
+              autoSkip: false, // prevent skipping of labels
+              maxRotation: 45,
+              minRotation: 45,
+              maxTicksLimit: xDateFromController.length // number of elements in the xArray
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Daily User'
+          }
+        },
+        responsive: true
+      }
+    });
+  </script>
+
+  <!--Country of users-->
+  <script>
+    const layoutCountry = {
+      annotations: [{
+        font: { size: 15 },
+        showarrow: false,
+        text: "<b>User's</b><br><b>Location</b>", x: 0.5, y: 0.5
+      }],
+      hoverlabel: {
+        bordercolor: 'white',
+        font: {
+          size: 18, // Size of the hover font
+          color: 'white' // Color of the hover text
+        }
+      },
+      showlegend: false
+    };
+
+    const data = [{
+      labels: xCountryFromController,
+      values: yUserCountryFromController,
+      hole: .4,
+      type: "pie",
+      textinfo: 'label',
+      textfont: { size: 18, color: 'white' },
+      hoverinfo: 'none',
+      hovertemplate: 'Users: %{value}<br>Percentage: %{percent}<extra></extra>',
+      marker: { //space between each country
+
+        line: { color: 'white', width: 3 }
+      }
+    }];
+
+    Plotly.newPlot("usersCountry", data, layoutCountry);
+  </script>
+
+  <!--Top users by post-->
+  <script>
+    var dataTopUser = [{
+      x: xTopNumBlogPostFromController,
+      y: yTopUserDisplayName,
+      marker: {
+        color: "#229e68",
+
+      },
+      name: "y",
+      orientation: "h",
+      type: "bar",
+      insidetextfont: { size: 20, color: "#FFF" }, // Styles for text inside the bar
+      constraintext: 'both',
+      hoverinfo: 'none'
+    }];
+
+    var layoutTopUser = {
+      autosize: true,
+      bargap: 0.1,
+      bargroupgap: 0.1,
+      barmode: "stack",
+      height: 400,
+      title: {
+        text: "Top Users Posting",
+        font: {
+          family: "Arial Black, Arial, sans-serif", // Using Arial Black for boldness
+          size: 24,
+          color: "black" //color for the title text
+        }
+      },
+      images: [ //manually set image as y-label
+        {
+          x: -0.05, y: 0,
+          sizex: 0.6, sizey: 0.6, //size of image
+          source: yProfilePicture[0],
+          xref: "paper", yref: "y",
+          xanchor: "right", yanchor: "middle"
+        },
+        {
+          x: -0.05, y: 1,
+          sizex: 0.6, sizey: 0.6,
+          source: yProfilePicture[1],
+          xref: "paper", yref: "y",
+          xanchor: "right", yanchor: "middle"
+        },
+        {
+          x: -0.05, y: 2,
+          sizex: 0.6, sizey: 0.6,
+          source: yProfilePicture[2],
+          xref: "paper", yref: "y",
+          xanchor: "right", yanchor: "middle"
+        }
+      ],
+      margin: {
+        l: 100
+      },
+      xaxis: {
+        showline: false,
+        zeroline: false,
+        showticklabels: false,
+        showgrid: false // Optionally hide the gridlines as well
+      },
+      yaxis: {
+        showticklabels: false, // Ensure y-axis labels are shown
+        automargin: true // Automatically adjust margin to fit labels
+      },
+      annotations: yTopUserDisplayName.map(function (name, index) {
+        var reverseIndex = yTopUserDisplayName.length - index;
+        return {
+          x: 0.05, y: index,
+          text: "#" + reverseIndex + " " + name, // Adjusted ranking
+          xref: "paper", yref: "y",
+          showarrow: false,
+          font: { size: 16, color: "white" },
+          xanchor: "left", yanchor: "middle"
+        };
+      }),
+    }
+    Plotly.newPlot('topUsersGraph', dataTopUser, layoutTopUser);
+  </script>
+
+  <script>
+    var myTechStacks = allTechniques;
+
+    // count frequency
+    var techStackCounts = {};
+    myTechStacks.forEach(function (techStack) {
+      techStack.split(',').forEach(function (tech) {
+        techStackCounts[tech] = (techStackCounts[tech] || 0) + 1;
+      });
+    });
+
+    var wordCloudData = Object.keys(techStackCounts).map(function (key) {
+      return { text: key, size: techStackCounts[key] };
+    });
+
+    // dimensions of word cloud
+    var width = 400;
+    var height = 400;
+
+    // Generate the word cloud
+    var layoutTech = d3.layout.cloud()
+      .size([width, height])
+      .words(wordCloudData)
+      .padding(5)
+      .rotate(function () { return ~~(Math.random() * 2) * 90; })
+      .font("Impact")
+      .fontSize(function (d) { return d.size * 10; }) // Scale the word size
+      .on("end", draw);
+
+    layoutTech.start();
+
+    function draw(words) {
+      // Define a color scale
+      var color = d3.scaleOrdinal(d3.schemeCategory10); // This is an example color scale
+
+      d3.select("#wordCloud").append("svg")
+        .attr("width", layoutTech.size()[0])
+        .attr("height", layoutTech.size()[1])
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function (d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        // Apply the color scale to each word
+        .style("fill", function (d, i) { return color(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function (d) { return d.text; });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.9/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

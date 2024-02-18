@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NBlog Profile Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+z0I5t9z5lFf5r5l5u5z5F5w5f5Oj04meM1a7xj"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"
+        rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #f4f4f4;
+        }
+
+        .navbar {
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff;
+            font-family: Brush Script MT;
+            font-size: 40px;
+            text-shadow: 2px 2px #4f956b;
+        }
+
+        .navbar .nav-item:not(:last-child) {
+            margin-right: 15px;
+        }
+
+        .navbar .nav-link {
+            color: #fff;
+        }
+
+        .navbar .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .navbar .search-box {
+            width: 200px;
+        }
+
+        .navbar .search-box input[type="text"] {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .navbar .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+        }
+
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            /*equal width for square shape*/
+            object-fit: cover;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.04);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        /* Main content container */
+        .main-content {
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 50px;
+        }
+
+        .bootstrap-tagsinput {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            line-height: 22px;
+        }
+
+        .bootstrap-tagsinput .tag {
+            margin-right: 2px;
+            color: white;
+            background-color: #0d6efd;
+            padding: 0.25em 0.75em;
+            border-radius: 0.375rem;
+        }
+
+        .bootstrap-tagsinput .tag [data-role="remove"]:after {
+            content: " x";
+            color: #fff;
+        }
+
+        .tech-stack-tags .badge {
+            margin-right: 5px;
+            padding-right: 40px;
+            padding: 4px 5px 7px 8px;
+            position: left;
+        }
+
+        .tech-stack-tags .btn-close {
+            position: right;
+            padding: 4px 5px 7px 5px;
+        }
+
+        .toast-image {
+            width: 20px;
+            /* Make the image fill the toast width */
+            height: 20px;
+            /* Maintain aspect ratio */
+            border-radius: 0.25rem;
+            /* Optional: to match Bootstrap's border-radius */
+        }
+
+        html {
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Profile Info Content -->
+        <div id="profileInfoContent" class="content-container">
+            <form id="updateProfile" th:action="@{/user/settings}" method="post" th:object="${blogUser}">
+                <!--Row1 profilePicture, githunLink, linkedinLink-->
+                <div class="row">
+                    <div class="col-6 bg-light p-2">
+                        <div class="row">
+                            <div class="col-6 mb-3 mt-5">
+                                <h2>About You</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 bg-light"><label for="profilePicture" class="form-label">Profile
+                                    Picture</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 bg-light">
+                                <img id="profilePicture" th:src="${activeUser.profilePicture}" alt="Avatar"
+                                    class="img-fluid"
+                                    style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
+                                <input class="form-control mt-3" id="profilePictureInput" type="text"
+                                    th:field=*{profilePicture} placeholder="Image URL">
+                            </div>
+                            <div class="col-6 bg-light">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 bg-light">
+                        <div class="row">
+                            <div class="col-6 mb-3 mt-5">
+                                <h2>Social</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 bg-light"><label for="githubLink" class="form-label">GitHub
+                                    Profile</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 bg-light"><input id="githubLink"
+                                    class="form-control form-control-lg mb-3" th:field="*{githubLink}" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 bg-light"><label for="linkedinLink" class="form-label">LinkedIn
+                                    Profile</label></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 bg-light"><input id="linkedinLink"
+                                    class="form-control form-control-lg mb-3" th:field="*{linkedinLink}" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 bg-light mt-5">
+                                <h2>Profile</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Row2 tagline, displayName-->
+                <div class="row">
+                    <div class="col-6 bg-light"><label for="profileTagline" class="form-label mt-3">Profile
+                            Tagline</label></div>
+                    <div class="col-6 bg-light"><label for="displayName" class="form-label mt-3">Display Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 bg-light"><input id="profileTagline" class="form-control form-control-lg mb-3"
+                            th:field="*{profileTagline}" type="text"></div>
+                    <div class="col-6 bg-light"><input id="displayName" class="form-control form-control-lg mb-3"
+                            th:field="*{displayName}" th:value="${blogUser.displayName}" type="text">
+                        <span th:if="${#fields.hasErrors('displayName')}" th:errors="*{displayName}"></span>
+                    </div>
+                </div>
+
+                <!--Row3 location, email-->
+                <div class="row">
+                    <div class="col-6 bg-light"><label for="location" class="form-label">Location</label></div>
+                    <div class="col-6 bg-light"><label for="email" class="form-label">Email Address</label></div>
+                </div>
+                <div class="row">
+                    <div class="col-6 bg-light"><input id="location" class="form-control form-control-lg mb-3"
+                            th:field="*{location}" type="text"></div>
+                    <div class="col-6 bg-light"><input id="email" class="form-control form-control-lg mb-3"
+                            th:field="*{email}" th:value="${blogUser.email}" type="email">
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    </div>
+                </div>
+
+                <!--Row4 aboutMe, myTechStack-->
+                <div class="row">
+                    <div class="col-6 bg-light"><label for="aboutMe" class="form-label">Profile Bio</label></div>
+                    <div class="col-6 bg-light"><label for="myTechStack" class="form-label">Tech Stack</label></div>
+                </div>
+                <div class="row">
+                    <div class="col-6 bg-light"><textarea id="aboutMe" class="form-control form-control-lg mb-3"
+                            th:field="*{aboutMe}" type="text" rows="5"></textarea></div>
+                    <!--<div class="col-6 bg-light"><input id="myTechStack" class="form-control form-control-lg mb-3" th:field="*{myTechStack}" type="text" ></div>-->
+                    <!-- Tech Stack input and add button -->
+                    <div class="col-5 bg-light">
+                        <div class="row">
+                            <div class="col"><input id="inputTechStack" class="form-control form-control-lg mb-3"
+                                    type="text" placeholder="Python, Java, C#..."></div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div id="techStackTags" class="tech-stack-tags"><!-- Tags will be added here --></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1 bg-light"><button type="button" id="addTechStack"
+                            class="btn btn-primary">Add</button></div>
+                    <!-- Hidden input to store the tech stack array -->
+                    <input type="hidden" name="myTechStack" id="myTechStack" value="">
+                </div>
+
+                <!--Row6 submit-->
+                <div class="row">
+                    <div class="col-12 bg-light"><input id="submitBtn" type="submit" value="Update"
+                            class="btn btn-primary  mt-3" />
+                        <input th:field="*{userId}" type="hidden" />
+                        <input th:field="*{password}" type="hidden" />
+                        <input th:field="*{signupTime}" type="hidden" />
+                        <input th:field="*{userStatus}" type="hidden" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div th:if="${updateSuccess}" class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body"><img class="toast-image rounded me-2" src="/images/success_tick.jpg"
+                        alt="description">
+                    Profile updated successfully
+                </div>
+            </div>
+        </div>
+
+        <!--Profile Picture-->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var form = document.getElementById('updateProfile');
+                var profilePicture = document.getElementById('profilePicture');
+                var profilePictureInput = document.getElementById('profilePictureInput');
+                var defaultImagePath = 'https://cdn.pixabay.com/photo/2018/11/13/21/43/avatar-3814049_1280.png';
+
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault(); // Prevent the form from submitting immediately
+
+                    var imageUrl = profilePictureInput.value.trim() ? profilePictureInput.value : defaultImagePath;
+
+                    if (imageUrl === defaultImagePath) {
+                        form.submit();
+                    }
+
+                    var img = new Image();
+                    img.src = imageUrl;
+                    img.onload = function () {
+                        profilePictureInput.value = imageUrl;
+                        form.submit();
+                    };
+                    img.onerror = function () {
+                        profilePictureInput.value = defaultImagePath;
+                        form.submit();
+                    };
+                });
+            });
+        </script>
+
+        <!--myTechStack-->
+        <script type="text/javascript" th:inline="javascript">
+            /*<![CDATA[*/
+            var techStackItemsFromDB = /*[[${blogUser.myTechStack}]]*/ 'default';
+            /*]]>*/
+        </script>
+        <script>
+            $(document).ready(function () {
+                var techStackItems = [];
+                if (typeof techStackItemsFromDB === 'string' && techStackItemsFromDB !== 'default' && techStackItemsFromDB != "") {
+                    techStackItems = techStackItemsFromDB.split(',').map(function (item) {
+                        return item.trim();
+                    });
+                }
+
+                function updateTechStackDisplay() {
+                    $('#techStackTags').empty();
+                    techStackItems.forEach(function (item, index) {
+                        $('#techStackTags').append(
+                            '<span class="badge bg-primary">' + item +
+                            '<button type="button" class="btn-close" onclick="removeTechStackItem(' + index + ')"></button></span> '
+                        );
+                    });
+                    $('#myTechStack').val(techStackItems.join(',')); // Update hidden field
+                }
+
+                window.removeTechStackItem = function (index) {
+                    techStackItems.splice(index, 1); // Remove the item from the array
+                    updateTechStackDisplay(); // Update the display
+                }
+
+                $('#addTechStack').click(function () {
+                    var techStackValue = $('#inputTechStack').val().trim();
+                    if (techStackValue && !techStackItems.includes(techStackValue)) { // Prevent duplicates
+                        techStackItems.push(techStackValue); // Add to array
+                        updateTechStackDisplay(); // Update the display
+                        $('#inputTechStack').val(''); // Clear input
+                    }
+                });
+
+                // Initial display update
+                updateTechStackDisplay();
+            });
+        </script>
+
+        <!--Toast message, update successful-->
+        <script th:if="${updateSuccess}">
+            document.addEventListener('DOMContentLoaded', (event) => {
+                var toastElement = document.getElementById('successToast');
+                var toast = new bootstrap.Toast(toastElement);
+                toast.show();
+                setTimeout(() => { toast.hide(); }, 3000); // Auto-hide after 3 seconds
+            });
+        </script>
+
+        <!--Others-->
+        <script>
+            // set style
+            document.querySelectorAll('label').forEach(function (label) {
+                label.classList.add('text-secondary');
+            });
+            document.querySelectorAll('span').forEach(function (span) {
+                span.classList.add('text-danger');
+                span.style.fontWeight = 'normal';
+            });
+        </script>
+
+        <!--Bootstrap and other scripts-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+            </script>
+</body>
+
+</html>

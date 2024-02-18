@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NBlog Home Page</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure full viewport height */
+        }
+
+        .container {
+            flex: 1; /* Allows the container to expand and fill the available space */
+        }
+
+        .navbar {
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff;
+            font-family: Brush Script MT;
+            font-size: 40px;
+            text-shadow: 2px 2px #4f956b;
+        }
+
+        .navbar .nav-item:not(:last-child) {
+            margin-right: 15px;
+        }
+
+        .navbar .nav-link {
+            color: #fff;
+            /* Adjusted for better visibility on gradient */
+        }
+
+        .navbar .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .navbar .search-box {
+            width: 200px;
+        }
+
+        .navbar .search-box input[type="text"] {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .post {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .post-title {
+            font-weight: 700;
+            /* Bold and formal font */
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .post-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            text-decoration: none;
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .read-more:hover {
+            background-image: linear-gradient(120deg, #c2e9fb 0%, #a1c4fd 100%);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.04);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            /*equal width for square shape*/
+            object-fit: cover;
+        }
+
+        .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .navbar .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+        }
+
+        .profile-image-container {
+            position: relative;
+        }
+
+        .blog-post-content {
+            height: 3em;
+            /* 根据行高和字体大小调整此值 */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* 您想显示的行数 */
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.04);
+        }
+        .reading-time {
+        color: #adb5bd; /* This is a light grey color */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="fragments/navbar :: navbar"></div>
+    
+
+    <div th:each="blog, iterStat : ${FavouritedBlog}" class="container mt-5">
+        <div class="card">
+            <div class="row no-gutters">
+                <div class="col-md-9">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <img th:src="${blog.blogUser.profilePicture}" alt="Avatar" class="rounded-circle profile-picture"
+                                style="width: 50px; height: 50px;">
+                            <div class="ml-3">
+                                <h5 class="card-title mb-0" th:text="${blog.blogUser.displayName}"></h5>
+                                <p class="card-text"><small th:text="${blog.blogTime}" class="text-muted"></small></p>
+                            </div>
+                        </div>
+                        <h4 class="card-title mt-3">
+                            <a th:href="@{/home/show/{id}(id = ${blog.blogId})}" th:text="${blog.contentTitle}">  </a> 
+                            <span class="reading-time" style="font-size: 1rem;"> <!-- 调整文本大小 -->
+                                <i class="bi bi-book-fill" style="font-size: 1rem;"></i> <!-- 调整图标大小 -->
+                                <span th:text="${blog.readingTime}"></span> min read
+                            </span>
+                            
+                        </h4>
+                        <p class="card-text blog-post-content" th:text="${blog.content}"></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge badge-light"><i class="bi bi-heart-fill" style="color:rgb(204, 25, 25)"></i> <span th:text="${blog.blogLikeCount}"></span></span>
+                                <span class="badge badge-light"><i class="bi bi-chat-dots-fill" style="color:rgb(40, 150, 180)"></i> <span th:text="${blog.blogCommentCount}"></span></span>
+                            </div>
+                            <!-- <div>
+                                <a href="#" class="badge badge-pill badge-secondary">Understanding Domain-Driven Design</a>
+                                <a href="#" class="badge badge-pill badge-secondary">Programming Blog</a>
+                            </div> -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div style="margin-left: auto;">
+                                    <div th:id="'techniques-container-' + ${iterStat.index}" 
+                                     th:data-techniques="${blog.techniqueSelected}">
+                                </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side content with profile picture (1 part width) -->
+                <div class="col-md-3 d-flex align-items-center justify-content-center">
+                    <img th:src="${blog.image}" alt="Profile Picture" class="img-fluid"
+                        style="height: 200px; width: auto; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener("DOMContentLoaded", function() {
+            // Select all technique containers
+            var techniqueContainers = document.querySelectorAll('[id^="techniques-container-"]');
+            techniqueContainers.forEach(function(container) {
+                // Retrieve the data-techniques attribute and split it by comma
+                var techniques = container.getAttribute('data-techniques').split(',');
+                container.innerHTML = ''; // Clear existing content
+                techniques.forEach(function(technique) {
+                    var div = document.createElement('div');
+                    div.className = 'badge badge-pill badge-secondary mr-2';
+                    div.textContent = technique.trim(); // Add the technique name
+                    container.appendChild(div); // Append the badge to the container
+                });
+            });
+        });
+        /*]]>*/
+    </script>
+
+
+
+
+    <div class="footer">
+        © 2024 NBlog. All rights reserved.
+    </div>
+
+
+    <!-- Include Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+
+
+</html>
